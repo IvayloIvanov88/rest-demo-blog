@@ -7,10 +7,8 @@ import demos.springdata.restdemo.gson.PostGsonSerializer;
 import demos.springdata.restdemo.model.Post;
 import demos.springdata.restdemo.service.PostService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
@@ -21,10 +19,13 @@ import java.net.URI;
 @RequestMapping("/api/simple")
 @Slf4j
 public class SimplePostController {
-    @Autowired
-    private PostService postService;
+    private final PostService postService;
 
     private Gson gson;
+
+    public SimplePostController(PostService postService) {
+        this.postService = postService;
+    }
 
     @PostConstruct
     private void init() {

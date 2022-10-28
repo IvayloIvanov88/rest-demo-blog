@@ -7,7 +7,6 @@ import demos.springdata.restdemo.model.Views;
 import demos.springdata.restdemo.service.PostService;
 import demos.springdata.restdemo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +21,15 @@ import java.util.Collection;
 @Slf4j
 public class PostController {
 
-    @Autowired
-    PostService postService;
 
-    @Autowired
-    UserService userService;
+    private final PostService postService;
+
+    private final UserService userService;
+
+    public PostController(PostService postService, UserService userService) {
+        this.postService = postService;
+        this.userService = userService;
+    }
 
     @GetMapping
     @JsonView(Views.Post.class)
@@ -56,7 +59,7 @@ public class PostController {
                 .fromMethodName(PostController.class, "addPost", post, authentication)
                 .pathSegment("{id}")
                 .buildAndExpand(created.getId())
-                .toUri() ;
+                .toUri();
         return ResponseEntity.created(location).body(created);
 //        return ResponseEntity.status(303).location(location).body(created);
     }
@@ -64,7 +67,7 @@ public class PostController {
     @PutMapping("{id}")
     @JsonView(Views.Post.class)
     public ResponseEntity<Post> updatePost(@PathVariable long id, @RequestBody Post post) {
-        if(post.getId() != id) throw new InvalidEntityException(
+        if (post.getId() != id) throw new InvalidEntityException(
                 String.format("Post ID=%s from path is different from Entity ID=%s", id, post.getId()));
         Post updated = postService.updatePost(post);
         log.info("Post updated: {}", updated);

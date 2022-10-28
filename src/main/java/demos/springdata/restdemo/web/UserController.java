@@ -4,7 +4,6 @@ import demos.springdata.restdemo.exception.InvalidEntityException;
 import demos.springdata.restdemo.model.User;
 import demos.springdata.restdemo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
@@ -18,8 +17,11 @@ import java.util.Collection;
 @Slf4j
 public class UserController {
 
-    @Autowired
-    private UserService service;
+    private final UserService service;
+
+    public UserController(UserService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public Collection<User> getUsers() {
