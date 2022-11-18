@@ -11,5 +11,5 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 public class UserCreationEvent {
-        private final User user;
+    private final User user;
 }

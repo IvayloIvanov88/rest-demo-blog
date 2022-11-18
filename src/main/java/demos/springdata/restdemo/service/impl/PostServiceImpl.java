@@ -1,7 +1,7 @@
 package demos.springdata.restdemo.service.impl;
 
-import demos.springdata.restdemo.dao.PostRepository;
-import demos.springdata.restdemo.dao.UserRepository;
+import demos.springdata.restdemo.repository.PostRepository;
+import demos.springdata.restdemo.repository.UserRepository;
 import demos.springdata.restdemo.events.PostCreationEvent;
 import demos.springdata.restdemo.exception.EntityNotFoundException;
 import demos.springdata.restdemo.exception.InvalidEntityException;

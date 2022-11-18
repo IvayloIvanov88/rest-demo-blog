@@ -1,4 +1,4 @@
-package demos.springdata.restdemo.dao;
+package demos.springdata.restdemo.repository;
 
 import demos.springdata.restdemo.model.Post;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,6 +1,6 @@
 package demos.springdata.restdemo.service.impl;
 
-import demos.springdata.restdemo.dao.UserRepository;
+import demos.springdata.restdemo.repository.UserRepository;
 import demos.springdata.restdemo.events.UserCreationEvent;
 import demos.springdata.restdemo.exception.InvalidEntityException;
 import demos.springdata.restdemo.model.User;
@@ -58,20 +58,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Long id) {
-        return userRepo.findById(id).orElseThrow(() ->
-                new EntityNotFoundException(String.format("User with ID=%s not found.", id)));
+        return userRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("User with ID=%s not found.", id)));
     }
 
     @Override
     public User getUserByUsername(String username) {
-        return userRepo.findByUsername(username).orElseThrow(() ->
-                new EntityNotFoundException(String.format("User '%s' not found.", username)));
+        return userRepo.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("User '%s' not found.", username)));
     }
 
     @Override
     public User deleteUser(Long id) {
-        User old = userRepo.findById(id).orElseThrow(() ->
-                new EntityNotFoundException(String.format("User with ID=%s not found.", id)));
+        User old = userRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("User with ID=%s not found.", id)));
         userRepo.deleteById(id);
         return old;
     }
@@ -84,10 +84,7 @@ public class UserServiceImpl implements UserService {
     // Declarative transaction
     @Transactional
     public List<User> createUsersBatch(List<User> users) {
-        List<User> created = users.stream()
-                .map(user -> createUser(user))
-                .collect(Collectors.toList());
-        return created;
+        return users.stream().map(this::createUser).collect(Collectors.toList());
     }
 
 ////    Programmatic transaction

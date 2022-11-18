@@ -11,5 +11,5 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 public class PostCreationEvent {
-        private final Post post;
+    private final Post post;
 }
