@@ -1,9 +1,8 @@
-package demos.springdata.restdemo;
+package demos.springdata.restdemo.integrational;
 
 import demos.springdata.restdemo.model.Post;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
@@ -12,18 +11,24 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class PostControllerTest extends AbstractTest {
+class PostControllerTest extends AbstractTest {
 
-    private String uri = "/api/posts";
+    private final String uri = "/api/posts";
+    private Post post;
 
     @Override
     @BeforeEach
     public void setUp() {
         super.setUp();
+        post = new Post();
+        post.setId(3L);
+        post.setContent("Spring Rest api");
+        post.setTitle("Spring test");
+        post.setImageUrl("http://empty.jpg");
     }
 
     @Test
-    public void testGetPostShouldReturnPost() throws Exception {
+    void testGetPostShouldReturnPost() throws Exception {
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri)
                 .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
 
@@ -35,12 +40,7 @@ public class PostControllerTest extends AbstractTest {
     }
 
     @Test
-    public void testAddPostShouldReturnPost() throws Exception {
-        Post post = new Post();
-        post.setId(3L);
-        post.setContent("Spring Rest api");
-        post.setTitle("Spring test");
-        post.setImageUrl("http://empty.jpg");
+    void testAddPostShouldReturnPost() throws Exception {
 
         String inputJson = super.mapToJson(post);
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
@@ -57,10 +57,9 @@ public class PostControllerTest extends AbstractTest {
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    public void testUpdatePost() throws Exception {
-        String uriUpdate = uri + "/2";
-        Post post = new Post();
-        post.setImageUrl("http://newImg.img");
+    void testUpdatePost() throws Exception {
+        String uriUpdate = uri + "/3";
+        post.setTitle("Test");
         String inputJson = super.mapToJson(post);
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(uriUpdate)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -68,7 +67,20 @@ public class PostControllerTest extends AbstractTest {
 
         int status = mvcResult.getResponse().getStatus();
         assertEquals(200, status);
-        assertEquals("http://newImg.img", post.getImageUrl());
+        assertEquals("http://empty.jpg", post.getImageUrl());
+        assertEquals("Spring Rest api", post.getContent());
+        assertEquals("Test", post.getTitle());
     }
 
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void testDeletePost() throws Exception {
+        String uriDelete = uri + "/3";
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(uriDelete)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status );
+    }
 }
