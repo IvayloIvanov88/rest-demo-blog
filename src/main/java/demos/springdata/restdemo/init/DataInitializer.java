@@ -5,7 +5,6 @@ import demos.springdata.restdemo.model.User;
 import demos.springdata.restdemo.service.PostService;
 import demos.springdata.restdemo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -17,10 +16,8 @@ import static demos.springdata.restdemo.model.User.ROLE_USER;
 @Component
 @Slf4j
 public class DataInitializer implements CommandLineRunner {
-    @Autowired
-    private PostService postService;
-    @Autowired
-    private UserService userService;
+    private final PostService postService;
+    private final UserService userService;
 
     private static final List<Post> SAMPLE_POSTS = List.of(
             new Post("Welcome to Spring Data", "Developing data access object with Spring Data is easy ...",
@@ -29,7 +26,7 @@ public class DataInitializer implements CommandLineRunner {
                     "https://www.publicdomainpictures.net/pictures/70000/velka/spring-grass-in-sun-light.jpg"),
             new Post("New in Spring 5", "Webflux provides reactive and non-blocking web service implemntation ...",
                     "https://www.publicdomainpictures.net/pictures/320000/velka/blute-blumen-garten-bluhen-1577191608UTW.jpg"),
-            new Post("Beginnig REST with Spring 5", "Spring MVC and WebFlux make implemeting RESTful services really easy ...",
+            new Post("Beginning REST with Spring 5", "Spring MVC and WebFlux make implementing RESTfull services really easy ...",
                     "https://www.publicdomainpictures.net/pictures/20000/velka/baby-lamb.jpg")
     );
     private static final List<User> SAMPLE_USERS = List.of(
@@ -37,9 +34,14 @@ public class DataInitializer implements CommandLineRunner {
             new User("Ivan", "Petrov", "ivan", "ivan", ROLE_USER)
     );
 
+    public DataInitializer(PostService postService, UserService userService) {
+        this.postService = postService;
+        this.userService = userService;
+    }
+
     @Override
     public void run(String... args) throws Exception {
-        SAMPLE_USERS.forEach(user -> userService.createUser(user));
+        SAMPLE_USERS.forEach(userService::createUser);
         log.info("Created Users: {}", userService.getUsers());
         SAMPLE_POSTS.forEach(post -> {
             post.setAuthor(userService.getUserById(1L));

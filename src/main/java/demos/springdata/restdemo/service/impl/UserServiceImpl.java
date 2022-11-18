@@ -1,15 +1,11 @@
 package demos.springdata.restdemo.service.impl;
 
-import demos.springdata.restdemo.dao.PostRepository;
 import demos.springdata.restdemo.dao.UserRepository;
 import demos.springdata.restdemo.events.UserCreationEvent;
 import demos.springdata.restdemo.exception.InvalidEntityException;
-import demos.springdata.restdemo.model.Post;
 import demos.springdata.restdemo.model.User;
-import demos.springdata.restdemo.service.PostService;
 import demos.springdata.restdemo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,8 +22,11 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
-    @Autowired
-    private UserRepository userRepo;
+    private final UserRepository userRepo;
+
+    public UserServiceImpl(UserRepository userRepo) {
+        this.userRepo = userRepo;
+    }
 
     @Override
     public Collection<User> getUsers() {
@@ -144,7 +143,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_ROLLBACK)
-    public void handleUserCreatedTransactionRollaback(UserCreationEvent creationEvent) {
+    public void handleUserCreatedTransactionRollback(UserCreationEvent creationEvent) {
         log.info(">>> Transaction ROLLBACK for user: {}", creationEvent.getUser());
     }
 

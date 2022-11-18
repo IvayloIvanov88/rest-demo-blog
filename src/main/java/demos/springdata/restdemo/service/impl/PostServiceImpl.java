@@ -1,6 +1,5 @@
 package demos.springdata.restdemo.service.impl;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import demos.springdata.restdemo.dao.PostRepository;
 import demos.springdata.restdemo.dao.UserRepository;
 import demos.springdata.restdemo.events.PostCreationEvent;
@@ -8,10 +7,8 @@ import demos.springdata.restdemo.exception.EntityNotFoundException;
 import demos.springdata.restdemo.exception.InvalidEntityException;
 import demos.springdata.restdemo.model.Post;
 import demos.springdata.restdemo.model.User;
-import demos.springdata.restdemo.model.Views;
 import demos.springdata.restdemo.service.PostService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,14 +25,17 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PostServiceImpl implements PostService {
 
-    @Autowired
-    private PostRepository postRepo;
+    private final PostRepository postRepo;
 
-    @Autowired
-    private UserRepository userRepo;
+    private final UserRepository userRepo;
 
-    @Autowired
-    private ApplicationEventPublisher applicationEventPublisher;
+    private final ApplicationEventPublisher applicationEventPublisher;
+
+    public PostServiceImpl(PostRepository postRepo, UserRepository userRepo, ApplicationEventPublisher applicationEventPublisher) {
+        this.postRepo = postRepo;
+        this.userRepo = userRepo;
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
 
     @Override
     public Collection<Post> getPosts() {
