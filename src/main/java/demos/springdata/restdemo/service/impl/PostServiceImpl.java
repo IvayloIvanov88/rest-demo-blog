@@ -19,6 +19,7 @@ import javax.validation.Valid;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,8 +74,8 @@ public class PostServiceImpl implements PostService {
     public Post updatePost(Post post) {
         post.setModified(new Date());
         Post old = getPostById(post.getId());
-        if (post.getAuthor() != null && post.getAuthor().getId() != old.getAuthor().getId())
-            throw new InvalidEntityException("Author of article could not ne changed");
+        if (post.getAuthor() != null && !Objects.equals(post.getAuthor().getId(), old.getAuthor().getId()))
+            throw new InvalidEntityException("Author of article could not be changed");
         post.setAuthor(old.getAuthor());
         return postRepo.save(post);
     }
