@@ -1,5 +1,6 @@
 package demos.springdata.restdemo.unit;
 
+import demos.springdata.restdemo.exception.InvalidEntityException;
 import demos.springdata.restdemo.model.User;
 import demos.springdata.restdemo.repository.UserRepository;
 import demos.springdata.restdemo.service.UserService;
@@ -12,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 
@@ -20,9 +20,9 @@ import java.util.Optional;
 public class UserServiceTest {
 
     private User testUser;
-    private UserServiceImpl userService;
+    private UserService userService;
     @Mock
-    UserRepository mockedUserRepository;
+    private UserRepository mockedUserRepository;
 
 
     @BeforeEach
@@ -33,7 +33,7 @@ public class UserServiceTest {
         testUser.setId(123L);
         testUser.setUsername("Random user");
         testUser.setPassword("1234");
-
+        mockedUserRepository.save(testUser);
 
     }
 
@@ -60,5 +60,29 @@ public class UserServiceTest {
         Assertions.assertEquals(testUser.getPassword(), actual.getPassword());
     }
 
+    @Test
+    public void createUserShouldCrateUser() {
+        User user = new User();
+        user.setUsername("User");
+        user.setId(666L);
+        user.setPassword("123");
 
+        Mockito.when(mockedUserRepository.findByUsername(user.getUsername())).thenReturn(Optional.empty());
+        Mockito.when(mockedUserRepository.save(user)).thenReturn(user);
+
+
+        User actual = userService.createUser(user);
+
+        Assertions.assertEquals(user.getUsername(), actual.getUsername());
+        Assertions.assertEquals(user.getId(), actual.getId());
+
+    }
+
+    @Test
+    public void createUserShouldThrowInvalidEntityExceptionIfUserIsAlreadyExist() throws InvalidEntityException {
+
+        Mockito.when(mockedUserRepository.findByUsername(testUser.getUsername())).thenReturn(Optional.of(testUser));
+
+        Assertions.assertThrows(InvalidEntityException.class, () -> userService.createUser(testUser));
+    }
 }
