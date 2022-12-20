@@ -14,7 +14,7 @@ public class PostGsonDeserializer implements JsonDeserializer<Post> {
 
     @Override
     public Post deserialize(JsonElement json, Type type,
-         JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+                            JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 
         JsonObject jsonObject = json.getAsJsonObject();
 
@@ -25,24 +25,27 @@ public class PostGsonDeserializer implements JsonDeserializer<Post> {
         JsonElement jsonAuthorId = jsonObject.get("authorId");
         JsonElement jsonCreated = jsonObject.get("created");
 
-        if(jsonTitle == null || jsonContent == null || jsonImageUrl == null ) {
+        if (jsonTitle == null || jsonContent == null || jsonImageUrl == null) {
             throw new InvalidEntityException("Title, content, and imageUrl should not be empty.");
         }
 
         Post post = new Post(jsonTitle.getAsString().toUpperCase(), jsonContent.getAsString(), jsonImageUrl.getAsString());
-        if(jsonId != null) {
+        if (jsonId != null) {
             post.setId(jsonId.getAsLong());
         }
-        if(jsonAuthorId != null) {
+
+        if (jsonAuthorId != null) {
             post.setAuthorId(jsonAuthorId.getAsLong());
         }
-        if(jsonCreated != null) {
+
+        if (jsonCreated != null) {
             try {
                 post.setCreated(sdf.parse(jsonCreated.getAsString()));
             } catch (ParseException e) {
                 throw new InvalidEntityException("Error parsing creation date: " + e.getMessage());
             }
         }
+
         return post;
     }
 }

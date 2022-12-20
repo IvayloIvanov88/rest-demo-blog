@@ -37,8 +37,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return username -> {
             try {
                 UserDetails found = users.getUserByUsername(username);
+
                 log.debug(">>> User authenticated for username: {} is {}", username, found);
+
                 return found;
+
             } catch (EntityNotFoundException ex) {
                 throw new UsernameNotFoundException(ex.getMessage(), ex);
             }

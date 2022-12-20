@@ -33,9 +33,12 @@ public class LoginController {
     public ResponseEntity<JwtResponse> login(@RequestBody Credentials credentials) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword()));
+
         final User user = userService
                 .getUserByUsername(credentials.getUsername());
+
         final String token = jwtUtils.generateToken(user);
+
         log.info("Login successful for {}: {}", user.getUsername(), token);
         return ResponseEntity.ok(new JwtResponse(token, user));
     }

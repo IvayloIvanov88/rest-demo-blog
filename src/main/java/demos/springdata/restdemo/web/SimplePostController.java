@@ -45,12 +45,16 @@ public class SimplePostController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> addPost(@RequestBody String body) {
         log.info("Body received: {}", body);
+
         Post post = gson.fromJson(body, Post.class);
         log.info("Post deserialized: {}", post);
+
         Post created = postService.createPost(post);
+
         URI uri = MvcUriComponentsBuilder
                 .fromMethodName(SimplePostController.class,"addPost", post)
                 .pathSegment("{id}").buildAndExpand(created.getId()).toUri();
+
         return ResponseEntity.created(uri).body(gson.toJson(created));
     }
 

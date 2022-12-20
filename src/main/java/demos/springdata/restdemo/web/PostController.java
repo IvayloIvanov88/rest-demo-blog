@@ -55,11 +55,13 @@ public class PostController {
 //        User author = userService.getUserByUsername(authentication.getName());
 //        post.setAuthor(author);
         Post created = postService.createPost(post);
+
         URI location = MvcUriComponentsBuilder
                 .fromMethodName(PostController.class, "addPost", post, authentication)
                 .pathSegment("{id}")
                 .buildAndExpand(created.getId())
                 .toUri();
+
         return ResponseEntity.created(location).body(created);
 //        return ResponseEntity.status(303).location(location).body(created);
     }
@@ -67,10 +69,14 @@ public class PostController {
     @PutMapping("{id}")
     @JsonView(Views.Post.class)
     public ResponseEntity<Post> updatePost(@PathVariable long id, @RequestBody Post post) {
-        if (post.getId() != id) throw new InvalidEntityException(
-                String.format("Post ID=%s from path is different from Entity ID=%s", id, post.getId()));
+        if (post.getId() != id) {
+            throw new InvalidEntityException(
+                    String.format("Post ID=%s from path is different from Entity ID=%s", id, post.getId()));
+        }
+
         Post updated = postService.updatePost(post);
         log.info("Post updated: {}", updated);
+
         return ResponseEntity.ok(updated);
     }
 }

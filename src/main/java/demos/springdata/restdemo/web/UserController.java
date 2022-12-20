@@ -41,18 +41,26 @@ public class UserController {
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
         User created = service.createUser(user);
+
         URI location = MvcUriComponentsBuilder.fromMethodName(UserController.class, "createUser", User.class)
                 .pathSegment("{id}").buildAndExpand(created.getId()).toUri() ;
+
         log.info("User created: {}", location);
+
         return ResponseEntity.created(location).body(created);
     }
 
     @PutMapping("{id}")
     public ResponseEntity<User> updateUser(@PathVariable long id, @RequestBody User user) {
-        if(user.getId() != id) throw new InvalidEntityException(
-                String.format("User ID=%s from path is different from Entity ID=%s", id, user.getId()));
+        if (user.getId() != id) {
+            throw new InvalidEntityException(
+                    String.format("User ID=%s from path is different from Entity ID=%s", id, user.getId()));
+        }
+
         User updated = service.updateUser(user);
+
         log.info("User updated: {}", updated);
+
         return ResponseEntity.ok(updated);
     }
 

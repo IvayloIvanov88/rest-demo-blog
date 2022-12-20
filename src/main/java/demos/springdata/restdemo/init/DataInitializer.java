@@ -42,11 +42,14 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         SAMPLE_USERS.forEach(userService::createUser);
+
         log.info("Created Users: {}", userService.getUsers());
+
         SAMPLE_POSTS.forEach(post -> {
             post.setAuthor(userService.getUserById(1L));
             postService.createPost(post);
         });
+
         log.info("Created Posts: {}", postService.getPosts());
     }
 }

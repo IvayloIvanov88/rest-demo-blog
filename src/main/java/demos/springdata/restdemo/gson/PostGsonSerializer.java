@@ -25,7 +25,7 @@ public class PostGsonSerializer implements JsonSerializer<Post> {
                 post.getCreated() != null ?
                         sdf.format(post.getCreated()) : null);
 
-        actorJsonObj.addProperty("Author", post.getAuthor()  != null ?
+        actorJsonObj.addProperty("Author", post.getAuthor() != null ?
                 post.getAuthor().getFirstName() + " " + post.getAuthor().getLastName() : null);
 
         actorJsonObj.addProperty("Content", post.getContent());

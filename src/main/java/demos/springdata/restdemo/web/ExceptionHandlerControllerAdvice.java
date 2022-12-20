@@ -21,6 +21,7 @@ public class ExceptionHandlerControllerAdvice {
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handle(EntityNotFoundException ex){
         log.error(ex.getMessage());
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(ex.getClass().getSimpleName(), ex.getMessage()));
     }
@@ -29,6 +30,7 @@ public class ExceptionHandlerControllerAdvice {
             HttpMessageConversionException.class, MalformedJsonException.class})
     public ResponseEntity<ErrorResponse> handle(Exception ex){
         log.error(ex.getMessage());
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(ex.getClass().getSimpleName(), ex.getMessage()));
     }
@@ -36,6 +38,7 @@ public class ExceptionHandlerControllerAdvice {
     @ExceptionHandler
     public ResponseEntity<String> handle(AccessDeniedException ex){
         log.error(ex.getMessage());
+
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(ex.getMessage());
     }

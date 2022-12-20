@@ -11,7 +11,7 @@ import java.util.Date;
 public class ErrorResponse {
     private Date timestamp = new Date();
     @NonNull
-    private String  error;
+    private String error;
     @NonNull
     private String message;
 }
